@@ -1,12 +1,14 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
 import customerRoutes from './routes/customerRoutes.js';
 import foodItemRoutes from './routes/foodItemRoutes.js';
 import foodMenuRoutes from './routes/foodMenuRoutes.js';
 import foodOrderRoutes from './routes/foodOrderRoutes.js';
 import foodProductRoutes from './routes/foodProductRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = 5000;

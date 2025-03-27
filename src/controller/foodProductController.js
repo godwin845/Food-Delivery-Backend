@@ -1,9 +1,9 @@
-import * as FoodProductService from '../services/foodProductService.js';
+import { saveFoodProduct, findFoodProductById, findAllFoodProducts, removeFoodProductById } from '../services/foodProductService.js';
 
 // POST: Save a new food product
-export const saveFoodProduct = async (req, res) => {
+export const saveFoodProductController = async (req, res) => {
     try {
-        const foodProduct = await FoodProductService.saveFoodProduct(req.body);
+        const foodProduct = await saveFoodProduct(req.body); // Use the imported function directly
         res.status(201).json({
             status: 201,
             message: 'Food product created successfully',
@@ -15,9 +15,9 @@ export const saveFoodProduct = async (req, res) => {
 };
 
 // GET: Find food product by ID
-export const findFoodProductById = async (req, res) => {
+export const findFoodProductByIdController = async (req, res) => {
     try {
-        const foodProduct = await FoodProductService.findFoodProductById(req.query.foodProductId);
+        const foodProduct = await findFoodProductById(req.query.foodProductId); // Use the imported function directly
         res.status(200).json({
             status: 200,
             message: 'Food product retrieved successfully',
@@ -29,9 +29,9 @@ export const findFoodProductById = async (req, res) => {
 };
 
 // GET: Find all food products
-export const findAllFoodProducts = async (req, res) => {
+export const findAllFoodProductsController = async (req, res) => {
     try {
-        const foodProducts = await FoodProductService.findAllFoodProducts();
+        const foodProducts = await findAllFoodProducts(); // Use the imported function directly
         res.status(200).json({
             status: 200,
             message: 'Food products retrieved successfully',
@@ -43,9 +43,9 @@ export const findAllFoodProducts = async (req, res) => {
 };
 
 // DELETE: Remove food product by ID
-export const removeFoodProductById = async (req, res) => {
+export const removeFoodProductByIdController = async (req, res) => {
     try {
-        const message = await FoodProductService.removeFoodProductById(req.query.foodProductId);
+        const message = await removeFoodProductById(req.query.foodProductId); // Use the imported function directly
         res.status(204).json({
             status: 204,
             message: message,

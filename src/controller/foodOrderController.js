@@ -1,10 +1,10 @@
-import FoodOrderService from '../services/FoodOrderService.js';
+import { saveFoodOrder, findFoodOrderById, findAllFoodOrders, deleteFoodOrderById } from '../services/foodOrderService.js';
 
 // Save a food order
-export const saveFoodOrder = async (req, res) => {
+export const saveFoodOrderController = async (req, res) => {
   try {
     const { customerId, foodItems, description } = req.body;
-    const foodOrder = await FoodOrderService.saveFoodOrder(customerId, foodItems, description);
+    const foodOrder = await saveFoodOrder(customerId, foodItems, description);  // Corrected this line
     res.status(201).json({
       message: 'Order placed successfully',
       data: foodOrder
@@ -15,9 +15,9 @@ export const saveFoodOrder = async (req, res) => {
 };
 
 // Find a food order by ID
-export const findFoodOrderById = async (req, res) => {
+export const findFoodOrderByIdController = async (req, res) => {
   try {
-    const foodOrder = await FoodOrderService.findFoodOrderById(req.params.id);
+    const foodOrder = await findFoodOrderById(req.params.id);  // Corrected this line
     res.status(200).json({
       message: 'Food order found successfully',
       data: foodOrder
@@ -28,9 +28,9 @@ export const findFoodOrderById = async (req, res) => {
 };
 
 // Find all food orders
-export const findAllFoodOrders = async (req, res) => {
+export const findAllFoodOrdersController = async (req, res) => {
   try {
-    const foodOrders = await FoodOrderService.findAllFoodOrders();
+    const foodOrders = await findAllFoodOrders();  // Corrected this line
     res.status(200).json({
       message: 'All food orders found successfully',
       data: foodOrders
@@ -41,9 +41,9 @@ export const findAllFoodOrders = async (req, res) => {
 };
 
 // Delete a food order by ID
-export const deleteFoodOrderById = async (req, res) => {
+export const deleteFoodOrderByIdController = async (req, res) => {
   try {
-    const foodOrder = await FoodOrderService.deleteFoodOrderById(req.params.id);
+    const foodOrder = await deleteFoodOrderById(req.params.id);  // Corrected this line
     res.status(200).json({
       message: 'Food order deleted successfully',
       data: foodOrder

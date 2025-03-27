@@ -1,6 +1,5 @@
-import FoodMenu from '../models/FoodMenu.js';
-import FoodProduct from '../models/FoodProduct.js';
-import User from '../models/User.js';
+import { FoodMenu } from '../models/FoodMenu.js';
+import User from '../models/userModel.js';
 
 const saveFoodMenu = async (foodMenuData, userId) => {
   const user = await User.findById(userId);

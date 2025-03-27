@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 // FoodOrder Schema
 const FoodOrderSchema = new mongoose.Schema({
@@ -8,6 +8,6 @@ const FoodOrderSchema = new mongoose.Schema({
   products: [{ type: Schema.Types.ObjectId, ref: 'FoodProduct' }]
 });
 
-const FoodOrder = mongoose.model('FoodOrder', FoodOrderSchema);
+export const FoodOrder = mongoose.model('FoodOrder', FoodOrderSchema);
 
-module.exports = FoodOrder;
+// export default FoodOrder;

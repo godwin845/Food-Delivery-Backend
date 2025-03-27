@@ -1,6 +1,6 @@
-import { User } from '../models/userModel.js';
+import User from '../models/userModel.js';
 import { Role } from '../models/userModel.js';
-import { FoodOrder } from '../models/foodOrderModel.js';
+import { FoodOrder } from '../models/FoodOrder.js';
 
 // Save a new user
 export const saveUser = async (user) => {

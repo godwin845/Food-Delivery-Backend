@@ -1,8 +1,16 @@
-import userService from '../services/userService.js';
+import { 
+  saveUser as saveUserService, 
+  findByEmail as findByEmailService, 
+  findById as findByIdService, 
+  findByPhoneNumber as findByPhoneNumberService, 
+  findAllUsers as findAllUsersService, 
+  updateUser as updateUserService, 
+  removeUser as removeUserService 
+} from '../services/userService.js';
 
-export const saveUser = async (req, res) => {
+export const saveUserController = async (req, res) => {
   try {
-    const user = await userService.saveUser(req.body);
+    const user = await saveUserService(req.body);
     res.status(201).json({
       status: 'Created',
       message: 'User saved successfully',
@@ -13,9 +21,9 @@ export const saveUser = async (req, res) => {
   }
 };
 
-export const findByEmail = async (req, res) => {
+export const findByEmailController = async (req, res) => {
   try {
-    const user = await userService.findByEmail(req.query.email);
+    const user = await findByEmailService(req.query.email);
     if (user) {
       res.status(200).json({
         status: 'OK',
@@ -30,9 +38,9 @@ export const findByEmail = async (req, res) => {
   }
 };
 
-export const findById = async (req, res) => {
+export const findByIdController = async (req, res) => {
   try {
-    const user = await userService.findById(req.query.userId);
+    const user = await findByIdService(req.query.userId);
     if (user) {
       res.status(200).json({
         status: 'OK',
@@ -47,9 +55,9 @@ export const findById = async (req, res) => {
   }
 };
 
-export const findByPhoneNumber = async (req, res) => {
+export const findByPhoneNumberController = async (req, res) => {
   try {
-    const user = await userService.findByPhoneNumber(req.query.phoneNumber);
+    const user = await findByPhoneNumberService(req.query.phoneNumber);
     if (user) {
       res.status(200).json({
         status: 'OK',
@@ -64,9 +72,9 @@ export const findByPhoneNumber = async (req, res) => {
   }
 };
 
-export const findAllUsers = async (req, res) => {
+export const findAllUsersController = async (req, res) => {
   try {
-    const users = await userService.findAllUsers();
+    const users = await findAllUsersService();
     res.status(200).json({
       status: 'OK',
       message: 'Users retrieved successfully',
@@ -77,9 +85,9 @@ export const findAllUsers = async (req, res) => {
   }
 };
 
-export const updateUser = async (req, res) => {
+export const updateUserController = async (req, res) => {
   try {
-    const user = await userService.updateUser(req.query.email, req.body);
+    const user = await updateUserService(req.query.email, req.body);
     res.status(200).json({
       status: 'OK',
       message: 'User updated successfully',
@@ -90,9 +98,9 @@ export const updateUser = async (req, res) => {
   }
 };
 
-export const removeUser = async (req, res) => {
+export const removeUserController = async (req, res) => {
   try {
-    const message = await userService.removeUser(req.query.email);
+    const message = await removeUserService(req.query.email);
     res.status(200).json({
       status: 'OK',
       message: message

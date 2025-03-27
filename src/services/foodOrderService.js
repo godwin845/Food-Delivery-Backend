@@ -1,6 +1,6 @@
-import FoodOrder from '../models/foodOrder.js';
-import Customer from '../models/customer.js';
-import FoodProduct from '../models/foodProduct.js';
+import { FoodOrder } from '../models/FoodOrder.js';
+import Customer from '../models/Customer.js';
+import FoodProduct from '../models/FoodProduct.js';
 
 // Save a food order
 export const saveFoodOrder = async (customerId, foodItems, description) => {

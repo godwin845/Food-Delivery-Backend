@@ -9,4 +9,6 @@ const foodProductSchema = new mongoose.Schema({
     description: { type: String, maxlength: 3000 }
 });
 
-module.exports = mongoose.model('FoodProduct', foodProductSchema);
+const FoodProduct = mongoose.model('FoodProduct', foodProductSchema);
+
+export default FoodProduct;

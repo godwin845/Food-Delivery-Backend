@@ -1,14 +1,22 @@
 import express from 'express';
-import userController from '../controller/userController.js';
+import { 
+    saveUserController, 
+    findByEmailController, 
+    findByIdController, 
+    findByPhoneNumberController, 
+    findAllUsersController, 
+    updateUserController, 
+    removeUserController 
+} from '../controller/userController.js';
 
 const router = express.Router();
 
-router.post('/saveUser', userController.saveUser);
-router.get('/findById', userController.findById);
-router.get('/findByEmail', userController.findByEmail);
-router.get('/findByNumber', userController.findByPhoneNumber);
-router.get('/findAllUser', userController.findAllUsers);
-router.put('/updateUser', userController.updateUser);
-router.delete('/deleteUser', userController.removeUser);
+router.post('/saveUser', saveUserController);
+router.get('/findById', findByIdController);
+router.get('/findByEmail', findByEmailController);
+router.get('/findByNumber', findByPhoneNumberController);
+router.get('/findAllUser', findAllUsersController);
+router.put('/updateUser', updateUserController);
+router.delete('/deleteUser', removeUserController);
 
 export default router;

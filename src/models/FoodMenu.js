@@ -1,10 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const foodMenuSchema = new mongoose.Schema({
   dishes: { type: String, enum: ['VEGETARIAN', 'NON_VEGETARIAN', 'VEGAN'], required: true },
   foodProducts: [{ type: Schema.Types.ObjectId, ref: 'FoodProduct' }]
 });
 
-const FoodMenu = mongoose.model('FoodMenu', foodMenuSchema);
-
-module.exports = FoodMenu;
+export const FoodMenu = mongoose.model('FoodMenu', foodMenuSchema);

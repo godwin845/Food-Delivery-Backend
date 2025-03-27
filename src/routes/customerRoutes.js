@@ -1,25 +1,31 @@
-// routes/customerRoutes.js
 import express from 'express';
-import CustomerController from '../controller/customerController.js';
+import { 
+  saveCustomerController, 
+  findCustomerByIdController, 
+  findCustomerByPhoneNumberController, 
+  findAllCustomersController, 
+  updateCustomerController, 
+  removeCustomerByIdController 
+} from '../controller/customerController.js';
 
 const router = express.Router();
 
 // Save Customer
-router.post('/saveCustomerFoodItemDao', CustomerController.saveCustomer);
+router.post('/saveCustomerFoodItemDao', saveCustomerController);
 
 // Find Customer by ID
-router.get('/findCustomerById', CustomerController.findCustomerById);
+router.get('/findCustomerById', findCustomerByIdController);
 
 // Find Customer by Phone Number
-router.get('/findCustomerByPhoneNumber', CustomerController.findCustomerByPhoneNumber);
+router.get('/findCustomerByPhoneNumber', findCustomerByPhoneNumberController);
 
 // Find All Customers
-router.get('/findAllCustomer', CustomerController.findAllCustomers);
+router.get('/findAllCustomer', findAllCustomersController);
 
 // Update Customer
-router.put('/updateCustomer', CustomerController.updateCustomer);
+router.put('/updateCustomer', updateCustomerController);
 
 // Remove Customer
-router.delete('/removeCustomerById', CustomerController.removeCustomerById);
+router.delete('/removeCustomerById', removeCustomerByIdController);
 
 export default router;
