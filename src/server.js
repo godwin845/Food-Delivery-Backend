@@ -7,6 +7,7 @@ import foodOrderRoutes from './routes/foodOrderRoutes.js';
 import foodProductRoutes from './routes/foodProductRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const app = express();
 const port = 5000;
 
 app.use(express.json());
+app.use(cors());
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
