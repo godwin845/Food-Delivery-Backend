@@ -1,10 +1,9 @@
-import FoodProduct from '../models/FoodProduct.js'; // Assuming you have the FoodProduct model set up
+import FoodProduct from '../models/FoodProduct.js';
 
-// POST: Save a new food product
 export const saveFoodProductController = async (req, res) => {
     try {
         const foodProductData = req.body;
-        const foodProduct = await FoodProduct.create(foodProductData); // Using Sequelize .create()
+        const foodProduct = await FoodProduct.create(foodProductData);
         res.status(201).json({
             status: 201,
             message: 'Food product created successfully',
@@ -15,11 +14,10 @@ export const saveFoodProductController = async (req, res) => {
     }
 };
 
-// GET: Find food product by ID
 export const findFoodProductByIdController = async (req, res) => {
     try {
         const foodProductId = req.query.foodProductId;
-        const foodProduct = await FoodProduct.findByPk(foodProductId); // Using Sequelize .findByPk()
+        const foodProduct = await FoodProduct.findByPk(foodProductId);
 
         if (!foodProduct) {
             return res.status(404).json({
@@ -38,10 +36,9 @@ export const findFoodProductByIdController = async (req, res) => {
     }
 };
 
-// GET: Find all food products
 export const findAllFoodProductsController = async (req, res) => {
     try {
-        const foodProducts = await FoodProduct.findAll(); // Using Sequelize .findAll()
+        const foodProducts = await FoodProduct.findAll();
         res.status(200).json({
             status: 200,
             message: 'Food products retrieved successfully',
@@ -52,11 +49,10 @@ export const findAllFoodProductsController = async (req, res) => {
     }
 };
 
-// DELETE: Remove food product by ID
 export const removeFoodProductByIdController = async (req, res) => {
     try {
         const foodProductId = req.query.foodProductId;
-        const foodProduct = await FoodProduct.findByPk(foodProductId); // Using Sequelize .findByPk()
+        const foodProduct = await FoodProduct.findByPk(foodProductId);
 
         if (!foodProduct) {
             return res.status(404).json({
@@ -65,7 +61,7 @@ export const removeFoodProductByIdController = async (req, res) => {
             });
         }
 
-        await foodProduct.destroy(); // Using Sequelize .destroy() to delete the product
+        await foodProduct.destroy();
         res.status(204).json({
             status: 204,
             message: 'Food product removed successfully',

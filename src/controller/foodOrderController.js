@@ -1,21 +1,16 @@
 import FoodOrder from '../models/FoodOrder.js';
 import FoodItem from '../models/FoodItem.js';
 
-// Save a food order
 export const saveFoodOrderController = async (req, res) => {
   try {
     const { customerId, foodItems, description } = req.body;
 
-    // Assuming FoodOrder has a relation to FoodItems (via a many-to-many relationship)
-    // Creating the order and associating the food items
     const foodOrder = await FoodOrder.create({
       customerId,
       description
     });
 
-    // Add food items to the order using a many-to-many relationship
-    // Assuming the foodItems array contains food item IDs
-    await foodOrder.addFoodItems(foodItems); // Using Sequelize's add association method
+    await foodOrder.addFoodItems(foodItems);
     
     res.status(201).json({
       message: 'Order placed successfully',
@@ -26,11 +21,10 @@ export const saveFoodOrderController = async (req, res) => {
   }
 };
 
-// Find a food order by ID
 export const findFoodOrderByIdController = async (req, res) => {
   try {
     const foodOrder = await FoodOrder.findByPk(req.params.id, {
-      include: [{ model: FoodItem, as: 'foodItems' }] // Assuming food items are associated
+      include: [{ model: FoodItem, as: 'foodItems' }]
     });
 
     if (!foodOrder) {
@@ -46,11 +40,10 @@ export const findFoodOrderByIdController = async (req, res) => {
   }
 };
 
-// Find all food orders
 export const findAllFoodOrdersController = async (req, res) => {
   try {
     const foodOrders = await FoodOrder.findAll({
-      include: [{ model: FoodItem, as: 'foodItems' }] // Assuming you want to include food items with each order
+      include: [{ model: FoodItem, as: 'foodItems' }]
     });
 
     res.status(200).json({
@@ -62,7 +55,6 @@ export const findAllFoodOrdersController = async (req, res) => {
   }
 };
 
-// Delete a food order by ID
 export const deleteFoodOrderByIdController = async (req, res) => {
   try {
     const foodOrder = await FoodOrder.findByPk(req.params.id);
@@ -71,7 +63,7 @@ export const deleteFoodOrderByIdController = async (req, res) => {
       return res.status(404).json({ message: 'Food order not found' });
     }
 
-    await foodOrder.destroy();  // Deleting the food order from the database
+    await foodOrder.destroy();
 
     res.status(200).json({
       message: 'Food order deleted successfully',

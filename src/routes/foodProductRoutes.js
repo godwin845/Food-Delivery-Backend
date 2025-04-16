@@ -8,7 +8,6 @@ import {
 
 const router = express.Router();
 
-// Routes
 router.post('/saveFoodProduct', saveFoodProductController);
 router.get('/findFoodProductByID', findFoodProductByIdController);
 router.get('/findAllFoodProduct', findAllFoodProductsController);

@@ -17,7 +17,6 @@ const port = 5000;
 app.use(express.json());
 app.use(cors());
 
-// API Routes
 app.use('/api', customerRoutes);
 app.use('/api', foodItemRoutes);
 app.use('/api', foodMenuRoutes);
@@ -25,7 +24,7 @@ app.use('/api/foodOrders', foodOrderRoutes);
 app.use('/api/foodProducts', foodProductRoutes);
 app.use('/api/foodProducts', userRoutes);
 
-sequelize.sync({ force: false })  // Set to true to drop and recreate tables each time
+sequelize.sync({ force: false })
   .then(() => {
     console.log('Connected to MYSQL!');
   })

@@ -1,7 +1,6 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../db.js';  // Sequelize instance
+import sequelize from '../db.js';
 
-// Enum for User roles
 export const Role = {
   STAFF: 'STAFF',
   CUSTOMER: 'CUSTOMER',
@@ -32,8 +31,7 @@ const User = sequelize.define('User', {
   },
 });
 
-// Example association to FoodOrder model
-User.hasMany(FoodOrder);  // A user can have many food orders
-FoodOrder.belongsTo(User);  // A food order belongs to a user
+User.hasMany(FoodOrder);
+FoodOrder.belongsTo(User);
 
 export default User;

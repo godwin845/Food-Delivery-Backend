@@ -1,29 +1,28 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
+import { Sequelize, DataTypes } from 'sequelize';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import session from 'express-session'; // Import express-session for session management
+import session from 'express-session';
 
-// Load environment variables
 dotenv.config();
 
-// MongoDB User Model
-const { Schema, model } = mongoose;
-
-const userSchema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+const sequelize = new Sequelize('Food Delivery Website', 'root', 'root', {
+  host: 'localhost',
+  dialect: 'mysql',
+  logging: false,
 });
 
-const User = model('User', userSchema);
+const User = sequelize.define('User', {
+  name: { type: DataTypes.STRING, allowNull: false },
+  email: { type: DataTypes.STRING, allowNull: false, unique: true },
+  password: { type: DataTypes.STRING, allowNull: false },
+});
 
-// Email transporter for sending reset emails
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -32,7 +31,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
   
@@ -50,7 +48,6 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-// Express Setup
 const app = express();
 const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || 'localhost';
@@ -60,50 +57,43 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(helmet());
 
-// Session Middleware Configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'ghshqd', // Secret key for signing the session ID cookie
-  resave: false,  // Don't save session if it's not modified
-  saveUninitialized: true,  // Save uninitialized session (e.g., for new visitors)
+  secret: process.env.SESSION_SECRET || 'ghshqd',
+  resave: false,
+  saveUninitialized: true,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',  // Set to true if using HTTPS in production
-    httpOnly: true,  // Prevent JavaScript from accessing the session cookie
-    maxAge: 24 * 60 * 60 * 1000,  // 24 hours
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
   },
 }));
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+sequelize.sync()
+  .then(() => console.log('Connected to MySQL'))
+  .catch((err) => console.error('MySQL connection error:', err));
 
-// User Routes
 
-// Get all users (only for authenticated users)
 app.get('/api/auth/users', verifyToken, async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.findAll();
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: error.message || 'Error fetching users' });
   }
 });
 
-// Register a new user
 app.post('/api/auth/register', async (req, res) => {
   const { name, email, password } = req.body;
   try {
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) throw new Error('Email already registered.');
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
-    await newUser.save();
+    const newUser = await User.create({ name, email, password: hashedPassword });
 
-    const token = jwt.sign({ userId: newUser._id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Store user info in session
-    req.session.user = { userId: newUser._id, email: newUser.email };
+    req.session.user = { userId: newUser.id, email: newUser.email };
 
     res.status(201).json({ message: 'User registered successfully.', token });
   } catch (error) {
@@ -111,20 +101,18 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// Login a user
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ where: { email } });
     if (!user) throw new Error('Invalid email or password.');
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) throw new Error('Invalid email or password.');
 
-    const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Store user info in session
-    req.session.user = { userId: user._id, email: user.email };
+    req.session.user = { userId: user.id, email: user.email };
 
     res.status(200).json({ message: 'Login successful.', token });
   } catch (error) {
@@ -132,7 +120,6 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Logout (destroy session)
 app.post('/api/auth/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -142,17 +129,16 @@ app.post('/api/auth/logout', (req, res) => {
   });
 });
 
-// Send a password reset email
 app.post('/api/auth/reset-password', async (req, res) => {
   const { email } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       res.status(404).json({ message: 'User not found.' });
       return;
     }
 
-    const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const resetToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     const resetLink = `http://localhost:5000/reset-password/${resetToken}`;
     
     await transporter.sendMail({
@@ -168,14 +154,13 @@ app.post('/api/auth/reset-password', async (req, res) => {
   }
 });
 
-// Reset password with the reset token
 app.post('/api/auth/reset-password/:resetToken', async (req, res) => {
   const { newPassword } = req.body;
   const { resetToken } = req.params;
 
   try {
     const decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId);
+    const user = await User.findByPk(decoded.userId);
     if (!user) {
       res.status(404).json({ message: 'User not found.' });
       return;
@@ -191,7 +176,6 @@ app.post('/api/auth/reset-password/:resetToken', async (req, res) => {
   }
 });
 
-// Start the server
 app.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
 });

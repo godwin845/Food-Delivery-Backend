@@ -1,7 +1,6 @@
-// User.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
-import FoodOrder from './FoodOrder.js'; // Import FoodOrder model
+import FoodOrder from './FoodOrder.js';
 
 export const Role = {
   STAFF: 'STAFF',
@@ -19,7 +18,7 @@ const User = sequelize.define('User', {
     unique: true,
   },
   phoneNumber: {
-    type: DataTypes.STRING, // Changed from Number to String as phone numbers are usually stored as strings
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
@@ -32,11 +31,10 @@ const User = sequelize.define('User', {
     allowNull: false,
   }
 }, {
-  timestamps: true, // Automatically adds createdAt and updatedAt fields
+  timestamps: true,
 });
 
-// Define associations (relationships)
-User.belongsToMany(FoodOrder, { through: 'User_FoodOrders' }); // Many-to-many relationship between User and FoodOrder
-FoodOrder.belongsToMany(User, { through: 'User_FoodOrders' }); // Reverse relationship
+User.belongsToMany(FoodOrder, { through: 'User_FoodOrders' });
+FoodOrder.belongsToMany(User, { through: 'User_FoodOrders' });
 
 export default User;

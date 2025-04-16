@@ -13,11 +13,10 @@ const FoodMenu = sequelize.define('FoodMenu', {
 
 FoodMenu.belongsToMany(FoodProduct, { through: 'FoodMenu_FoodProducts' });
 
-// Adding aliases for self-association
 FoodMenu.belongsToMany(FoodMenu, { 
   through: 'FoodMenu_FoodProducts', 
-  as: 'RelatedMenus',  // You can use any alias here
-  foreignKey: 'menuId', // Optionally, define the foreign key if needed
+  as: 'RelatedMenus',
+  foreignKey: 'menuId',
 });
 
 export default FoodMenu;
