@@ -1,10 +1,10 @@
-import Customer from '../models/Customer.js';
+// customerService.js
+import Customer from '../models/Customer.js';  // Import the Sequelize model
 
 // Create a new customer
 export const saveCustomer = async (customerData) => {
   try {
-    const customer = new Customer(customerData);
-    await customer.save();
+    const customer = await Customer.create(customerData); // Sequelize's `create()` method
     return customer;
   } catch (error) {
     throw new Error('Error creating customer: ' + error.message);
@@ -14,7 +14,7 @@ export const saveCustomer = async (customerData) => {
 // Find customer by ID
 export const findCustomerById = async (customerId) => {
   try {
-    const customer = await Customer.findById(customerId);
+    const customer = await Customer.findByPk(customerId); // Sequelize's `findByPk()` for primary key
     return customer;
   } catch (error) {
     throw new Error('Error fetching customer by ID: ' + error.message);
@@ -24,7 +24,7 @@ export const findCustomerById = async (customerId) => {
 // Find customer by phone number
 export const findCustomerByPhoneNumber = async (phoneNumber) => {
   try {
-    const customer = await Customer.findOne({ phoneNumber });
+    const customer = await Customer.findOne({ where: { phoneNumber } }); // Sequelize's `findOne()` with `where` clause
     return customer;
   } catch (error) {
     throw new Error('Error fetching customer by phone number: ' + error.message);
@@ -34,7 +34,7 @@ export const findCustomerByPhoneNumber = async (phoneNumber) => {
 // Find all customers
 export const findAllCustomers = async () => {
   try {
-    const customers = await Customer.find();
+    const customers = await Customer.findAll(); // Sequelize's `findAll()`
     return customers;
   } catch (error) {
     throw new Error('Error fetching all customers: ' + error.message);
@@ -44,8 +44,11 @@ export const findAllCustomers = async () => {
 // Update a customer
 export const updateCustomer = async (customerId, updatedData) => {
   try {
-    const customer = await Customer.findByIdAndUpdate(customerId, updatedData, { new: true });
-    return customer;
+    const [updatedRowCount, updatedCustomers] = await Customer.update(updatedData, {
+      where: { id: customerId }, // Condition to find the customer by ID
+      returning: true,  // Get the updated customer details
+    });
+    return updatedCustomers[0]; // `updatedCustomers` contains the updated rows
   } catch (error) {
     throw new Error('Error updating customer: ' + error.message);
   }
@@ -54,8 +57,10 @@ export const updateCustomer = async (customerId, updatedData) => {
 // Remove customer by ID
 export const removeCustomerById = async (customerId) => {
   try {
-    const customer = await Customer.findByIdAndDelete(customerId);
-    return customer;
+    const deletedRowCount = await Customer.destroy({
+      where: { id: customerId }  // Condition to find the customer by ID
+    });
+    return deletedRowCount;  // Returns the number of deleted rows
   } catch (error) {
     throw new Error('Error deleting customer: ' + error.message);
   }

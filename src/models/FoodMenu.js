@@ -1,8 +1,23 @@
-import mongoose, { Schema } from 'mongoose';
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import FoodProduct from "./FoodProduct.js";
 
-const foodMenuSchema = new mongoose.Schema({
-  dishes: { type: String, enum: ['VEGETARIAN', 'NON_VEGETARIAN', 'VEGAN'], required: true },
-  foodProducts: [{ type: Schema.Types.ObjectId, ref: 'FoodProduct' }]
+const FoodMenu = sequelize.define('FoodMenu', {
+  dishes: {
+    type: DataTypes.ENUM('VEGETARIAN', 'NON_VEGETARIAN', 'VEGAN'),
+    allowNull: false,
+  },
+}, {
+  timestamps: true,
 });
 
-export const FoodMenu = mongoose.model('FoodMenu', foodMenuSchema);
+FoodMenu.belongsToMany(FoodProduct, { through: 'FoodMenu_FoodProducts' });
+
+// Adding aliases for self-association
+FoodMenu.belongsToMany(FoodMenu, { 
+  through: 'FoodMenu_FoodProducts', 
+  as: 'RelatedMenus',  // You can use any alias here
+  foreignKey: 'menuId', // Optionally, define the foreign key if needed
+});
+
+export default FoodMenu;

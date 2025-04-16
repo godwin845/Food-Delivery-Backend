@@ -1,14 +1,40 @@
-import mongoose from 'mongoose';
+import { DataTypes } from "sequelize";
+import sequelize from '../config/db.js';
 
-const foodProductSchema = new mongoose.Schema({
-    name: { type: String, required: true, maxlength: 255 },
-    totalPrice: { type: Number, required: true },
-    discount: { type: Number, default: 0 },
-    availability: { type: Number, required: true },
-    type: { type: String, enum: ['VEG', 'NON_VEG'], required: true },
-    description: { type: String, maxlength: 3000 }
+const FoodProduct = sequelize.define('FoodProduct', {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            len: [0, 255],
+        }
+    },
+    totalPrice: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+            len: [0, 255],
+        }
+    },
+    discount: {
+        type: DataTypes.FLOAT,
+        defaultValue: 0,
+    },
+    availability: {
+        type: DataTypes.INTEGER,
+        allowNull:false,
+    },
+    type: {
+        type: DataTypes.ENUM('VEG', 'NON_VEG'),
+        allowNull: false,
+    },
+    description: {
+        type: DataTypes.STRING(3000),
+        allowNull: false,
+    }
+}, {
+
+    timestamps: true,
 });
-
-const FoodProduct = mongoose.model('FoodProduct', foodProductSchema);
 
 export default FoodProduct;
